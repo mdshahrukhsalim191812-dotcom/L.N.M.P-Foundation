@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
-
 import "./globals.css";
 
 import Navbar from "@/components/Navbar";
@@ -19,15 +17,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-white text-gray-900 antialiased">
-        {/* Razorpay Script */}
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-
-        <Navbar />
-
-        {children}
-
-        <Footer />
+        <ConditionalLayout>
+          {children}
+        </ConditionalLayout>
       </body>
     </html>
+  );
+}
+
+function ConditionalLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  if (
+    typeof window !== "undefined" &&
+    window.location.pathname.startsWith("/admin")
+  ) {
+    return <>{children}</>;
+  }
+
+  return (
+    <>
+      <Navbar />
+      {children}
+      <Footer />
+    </>
   );
 }
