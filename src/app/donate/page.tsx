@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import {
     Heart,
     Users,
@@ -33,6 +35,13 @@ const donationPrograms = [
 
 export default function DonatePage() {
 
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        amount: "",
+        message: "",
+    });
+
     const handlePayment = async () => {
         try {
             const res = await fetch("/api/create-order", {
@@ -41,7 +50,7 @@ export default function DonatePage() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    amount: 500,
+                    amount: formData.amount,
                 }),
             });
 
@@ -61,14 +70,19 @@ export default function DonatePage() {
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify(response),
+                        body: JSON.stringify({
+                            ...response,
+                            name: formData.name,
+                            email: formData.email,
+                            amount: formData.amount,
+                            message: formData.message,
+                        }),
                     });
 
                     const data = await verifyRes.json();
 
                     if (data.success) {
-                        alert("Payment Verified Successfully");
-                        console.log(response);
+                        window.location.href = "/success";
                     } else {
                         alert("Payment Verification Failed");
                     }
@@ -170,6 +184,13 @@ export default function DonatePage() {
                                 <input
                                     type="text"
                                     placeholder="Enter your name"
+                                    value={formData.name}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            name: e.target.value,
+                                        })
+                                    }
                                     className="w-full rounded-2xl border border-gray-200 px-5 py-4 outline-none transition focus:border-emerald-500"
                                 />
                             </div>
@@ -183,6 +204,13 @@ export default function DonatePage() {
                                 <input
                                     type="email"
                                     placeholder="Enter your email"
+                                    value={formData.email}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            email: e.target.value,
+                                        })
+                                    }
                                     className="w-full rounded-2xl border border-gray-200 px-5 py-4 outline-none transition focus:border-emerald-500"
                                 />
                             </div>
@@ -196,6 +224,13 @@ export default function DonatePage() {
                                 <input
                                     type="number"
                                     placeholder="Enter donation amount"
+                                    value={formData.amount}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            amount: e.target.value,
+                                        })
+                                    }
                                     className="w-full rounded-2xl border border-gray-200 px-5 py-4 outline-none transition focus:border-emerald-500"
                                 />
                             </div>
@@ -209,6 +244,13 @@ export default function DonatePage() {
                                 <textarea
                                     rows={5}
                                     placeholder="Write a message..."
+                                    value={formData.message}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            message: e.target.value,
+                                        })
+                                    }
                                     className="w-full rounded-2xl border border-gray-200 px-5 py-4 outline-none transition focus:border-emerald-500"
                                 />
                             </div>

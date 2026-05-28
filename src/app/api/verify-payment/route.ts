@@ -1,5 +1,7 @@
 import crypto from "crypto";
 import { NextResponse } from "next/server";
+import { connectDB } from "@/lib/mongodb";
+import { Donation } from "@/models/Donation";
 
 export async function POST(req: Request) {
     try {
@@ -25,6 +27,17 @@ export async function POST(req: Request) {
             expectedSign === razorpay_signature;
 
         if (isAuthentic) {
+            await connectDB();
+
+            await Donation.create({
+                name: body.name,
+                email: body.email,
+                amount: body.amount,
+                message: body.message,
+                paymentId: body.razorpay_payment_id,
+                orderId: body.razorpay_order_id,
+            });
+
             return NextResponse.json({
                 success: true,
                 message: "Payment verified successfully",
