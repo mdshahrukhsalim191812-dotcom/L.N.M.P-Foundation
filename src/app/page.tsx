@@ -1,103 +1,150 @@
-import Image from "next/image";
-
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen bg-white text-gray-800">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-700 text-white">
+        <div className="mx-auto max-w-7xl px-6 py-24 lg:flex lg:items-center lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-4 inline-block rounded-full bg-white/20 px-4 py-1 text-sm backdrop-blur">
+              Welcome to Our Foundation
+            </p>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+            <h1 className="text-4xl font-bold leading-tight md:text-6xl">
+              Building Hope <br />
+              Through Education & Humanity
+            </h1>
+
+            <p className="mt-6 text-lg text-emerald-100">
+              We are committed to helping communities through education,
+              awareness, youth development, and social support programs.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-4">
+              <button
+                className="rounded-xl bg-white px-6 py-3 font-semibold text-emerald-700 transition hover:bg-gray-100">
+                Donate Now
+              </button>
+
+              <button className="rounded-xl border border-white px-6 py-3 font-semibold transition hover:bg-white hover:text-emerald-700">
+                Join as Volunteer
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-12 lg:mt-0">
+            <img
+              src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop"
+              alt="Foundation"
+              className="w-full max-w-lg rounded-3xl shadow-2xl"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+
+      {/* About Section */}
+      <section className="mx-auto max-w-7xl px-6 py-20">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div>
+            <img
+              src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200&auto=format&fit=crop"
+              alt="About"
+              className="rounded-3xl shadow-xl"
+            />
+          </div>
+
+          <div>
+            <h2 className="text-4xl font-bold text-gray-900">
+              About Our Foundation
+            </h2>
+
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Our foundation works to empower students, guide youth, support
+              families, and organize educational and community-driven programs.
+              We believe positive change begins with knowledge, compassion, and
+              unity.
+            </p>
+
+            <div className="mt-8 grid grid-cols-2 gap-6">
+              <div className="rounded-2xl bg-emerald-50 p-6">
+                <h3 className="text-3xl font-bold text-emerald-700">500+</h3>
+                <p className="mt-2 text-gray-600">Students Supported</p>
+              </div>
+
+              <div className="rounded-2xl bg-teal-50 p-6">
+                <h3 className="text-3xl font-bold text-teal-700">50+</h3>
+                <p className="mt-2 text-gray-600">Community Events</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Programs Section */}
+      <section className="bg-gray-50 py-20">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-gray-900">
+              Our Programs
+            </h2>
+
+            <p className="mt-4 text-lg text-gray-600">
+              Programs focused on education, youth empowerment, and social
+              welfare.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                title: "Education Support",
+                desc: "Helping students with learning resources and guidance.",
+              },
+              {
+                title: "Youth Development",
+                desc: "Workshops, seminars, and motivational programs.",
+              },
+              {
+                title: "Community Welfare",
+                desc: "Supporting needy families and social initiatives.",
+              },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="rounded-3xl bg-white p-8 shadow-lg transition hover:-translate-y-2 hover:shadow-2xl"
+              >
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-2xl">
+                  🌱
+                </div>
+
+                <h3 className="text-2xl font-bold text-gray-900">
+                  {item.title}
+                </h3>
+
+                <p className="mt-4 leading-7 text-gray-600">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Donation CTA */}
+      <section className="bg-emerald-700 py-20 text-white">
+        <div className="mx-auto max-w-4xl px-6 text-center">
+          <h2 className="text-4xl font-bold">
+            Together We Can Make a Difference
+          </h2>
+
+          <p className="mt-6 text-lg text-emerald-100">
+            Your support helps us continue educational, humanitarian, and
+            community development initiatives.
+          </p>
+
+          <button className="mt-8 rounded-2xl bg-white px-8 py-4 text-lg font-semibold text-emerald-700 transition hover:bg-gray-100">
+            Donate Now
+          </button>
+        </div>
+      </section>
+
+    </main>
   );
 }
