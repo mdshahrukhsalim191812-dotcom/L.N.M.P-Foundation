@@ -8,9 +8,9 @@ export default function WebsiteLayout({
 }) {
     return (
         <>
-            <body />
+            <Navbar />
             {children}
-            <body/>
+            <Footer />
         </>
     );
 }
