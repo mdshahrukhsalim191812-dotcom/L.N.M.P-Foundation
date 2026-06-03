@@ -36,17 +36,66 @@ const donationPrograms = [
 
 declare global {
     interface Window {
-        Razorpay: any;
+        Razorpay: new (
+            options: RazorpayOptions
+        ) => RazorpayInstance;
     }
 }
 
+interface RazorpayResponse {
+    razorpay_payment_id: string;
+    razorpay_order_id: string;
+    razorpay_signature: string;
+}
+
+interface RazorpayOptions {
+    key: string | undefined;
+    amount: number;
+    currency: string;
+    name: string;
+    description: string;
+    order_id: string;
+
+    prefill: {
+        name: string;
+        email: string;
+    };
+
+    handler: (
+        response: RazorpayResponse
+    ) => Promise<void>;
+
+    modal: {
+        ondismiss: () => void;
+    };
+
+    theme: {
+        color: string;
+    };
+}
+
+interface RazorpayInstance {
+    open: () => void;
+
+    on: (
+        event: string,
+        callback: (
+            response: RazorpayResponse
+        ) => void
+    ) => void;
+}
+
 export default function DonatePage() {
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        amount: "",
-        message: "",
-    });
+    const [loading, setLoading] =
+        useState(false);
+
+    const [formData, setFormData] =
+        useState({
+            name: "",
+            email: "",
+            amount: "",
+            message: "",
+        });
 
     const handlePayment = async () => {
         try {
@@ -56,28 +105,56 @@ export default function DonatePage() {
                 !formData.email ||
                 !formData.amount
             ) {
-                alert("Please fill all required fields");
+                alert(
+                    "Please fill all required fields"
+                );
+
                 return;
             }
 
-            // Create Razorpay Order
-            const res = await fetch("/api/create-order", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    amount: formData.amount,
-                }),
-            });
+            setLoading(true);
 
-            const data = await res.json();
+            // Create Order
+            const res = await fetch(
+                "/api/create-order",
+                {
+                    method: "POST",
 
-            console.log("ORDER DATA:", data);
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+                    },
+
+                    body: JSON.stringify({
+                        amount:
+                            formData.amount,
+                    }),
+                }
+            );
+
+            const data =
+                await res.json();
+
+            console.log(
+                "ORDER RESPONSE:",
+                data
+            );
+
+            if (!data.id) {
+                alert(
+                    "Failed to create payment order"
+                );
+
+                setLoading(false);
+
+                return;
+            }
 
             // Razorpay Options
-            const options = {
-                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+            const options: RazorpayOptions =
+            {
+                key: process.env
+                    .NEXT_PUBLIC_RAZORPAY_KEY_ID,
 
                 amount: data.amount,
 
@@ -85,42 +162,58 @@ export default function DonatePage() {
 
                 name: "Trust Foundation",
 
-                description: "Donation Payment",
+                description:
+                    "Donation Payment",
 
                 order_id: data.id,
 
                 prefill: {
                     name: formData.name,
-                    email: formData.email,
+
+                    email:
+                        formData.email,
                 },
 
-                handler: async function (response: any) {
+                handler: async function (
+                    response: RazorpayResponse
+                ) {
                     try {
-                        console.log("PAYMENT RESPONSE:", response);
-
-                        const verifyRes = await fetch(
-                            "/api/verify-payment",
-                            {
-                                method: "POST",
-
-                                headers: {
-                                    "Content-Type":
-                                        "application/json",
-                                },
-
-                                body: JSON.stringify({
-                                    ...response,
-
-                                    name: formData.name,
-
-                                    email: formData.email,
-
-                                    amount: formData.amount,
-
-                                    message: formData.message,
-                                }),
-                            }
+                        console.log(
+                            "PAYMENT SUCCESS:",
+                            response
                         );
+
+                        const verifyRes =
+                            await fetch(
+                                "/api/verify-payment",
+                                {
+                                    method:
+                                        "POST",
+
+                                    headers:
+                                    {
+                                        "Content-Type":
+                                            "application/json",
+                                    },
+
+                                    body: JSON.stringify(
+                                        {
+                                            ...response,
+
+                                            name: formData.name,
+
+                                            email:
+                                                formData.email,
+
+                                            amount:
+                                                formData.amount,
+
+                                            message:
+                                                formData.message,
+                                        }
+                                    ),
+                                }
+                            );
 
                         const verifyData =
                             await verifyRes.json();
@@ -130,8 +223,12 @@ export default function DonatePage() {
                             verifyData
                         );
 
-                        if (verifyData.success) {
-                            alert("Payment Successful");
+                        if (
+                            verifyData.success
+                        ) {
+                            alert(
+                                "Payment Successful"
+                            );
 
                             window.location.href =
                                 "/success";
@@ -140,8 +237,12 @@ export default function DonatePage() {
                                 "Payment Verification Failed"
                             );
                         }
-                    } catch (error) {
-                        console.log(error);
+                    } catch (
+                    verifyError
+                    ) {
+                        console.log(
+                            verifyError
+                        );
 
                         alert(
                             "Verification Failed"
@@ -150,11 +251,16 @@ export default function DonatePage() {
                 },
 
                 modal: {
-                    ondismiss: function () {
-                        console.log(
-                            "Payment popup closed"
-                        );
-                    },
+                    ondismiss:
+                        function () {
+                            console.log(
+                                "Payment popup closed"
+                            );
+
+                            setLoading(
+                                false
+                            );
+                        },
                 },
 
                 theme: {
@@ -163,11 +269,15 @@ export default function DonatePage() {
             };
 
             const razorpay =
-                new window.Razorpay(options);
+                new window.Razorpay(
+                    options
+                );
 
             razorpay.on(
                 "payment.failed",
-                function (response: any) {
+                function (
+                    response: RazorpayResponse
+                ) {
                     console.log(
                         "PAYMENT FAILED:",
                         response
@@ -176,14 +286,20 @@ export default function DonatePage() {
                     alert(
                         "Payment Failed"
                     );
+
+                    setLoading(false);
                 }
             );
 
             razorpay.open();
+
+            setLoading(false);
         } catch (error) {
             console.log(error);
 
             alert("Something went wrong");
+
+            setLoading(false);
         }
     };
 
@@ -214,34 +330,47 @@ export default function DonatePage() {
                 {/* Donation Cards */}
                 <section className="mx-auto max-w-7xl px-6 py-20">
                     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                        {donationPrograms.map((program, index) => (
-                            <div
-                                key={index}
-                                className="rounded-3xl border border-gray-100 bg-white p-8 shadow-xl transition hover:-translate-y-2 hover:shadow-2xl"
-                            >
-                                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
-                                    {program.icon}
+                        {donationPrograms.map(
+                            (
+                                program,
+                                index
+                            ) => (
+                                <div
+                                    key={index}
+                                    className="rounded-3xl border border-gray-100 bg-white p-8 shadow-xl transition hover:-translate-y-2 hover:shadow-2xl"
+                                >
+                                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+                                        {
+                                            program.icon
+                                        }
+                                    </div>
+
+                                    <h2 className="mt-6 text-2xl font-bold text-gray-900">
+                                        {
+                                            program.title
+                                        }
+                                    </h2>
+
+                                    <p className="mt-4 leading-7 text-gray-600">
+                                        {
+                                            program.description
+                                        }
+                                    </p>
+
+                                    <div className="mt-6">
+                                        <span className="text-4xl font-bold text-emerald-600">
+                                            {
+                                                program.amount
+                                            }
+                                        </span>
+                                    </div>
+
+                                    <button className="mt-8 w-full rounded-2xl bg-emerald-600 px-6 py-4 text-lg font-semibold text-white transition hover:bg-emerald-700">
+                                        Donate Now
+                                    </button>
                                 </div>
-
-                                <h2 className="mt-6 text-2xl font-bold text-gray-900">
-                                    {program.title}
-                                </h2>
-
-                                <p className="mt-4 leading-7 text-gray-600">
-                                    {program.description}
-                                </p>
-
-                                <div className="mt-6">
-                                    <span className="text-4xl font-bold text-emerald-600">
-                                        {program.amount}
-                                    </span>
-                                </div>
-
-                                <button className="mt-8 w-full rounded-2xl bg-emerald-600 px-6 py-4 text-lg font-semibold text-white transition hover:bg-emerald-700">
-                                    Donate Now
-                                </button>
-                            </div>
-                        ))}
+                            )
+                        )}
                     </div>
                 </section>
 
@@ -259,8 +388,7 @@ export default function DonatePage() {
                                 </h2>
 
                                 <p className="mt-4 text-lg text-gray-600">
-                                    Choose your own amount and support our
-                                    mission.
+                                    Choose your own amount and support our mission.
                                 </p>
                             </div>
 
@@ -274,12 +402,20 @@ export default function DonatePage() {
                                     <input
                                         type="text"
                                         placeholder="Enter your name"
-                                        value={formData.name}
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                name: e.target.value,
-                                            })
+                                        value={
+                                            formData.name
+                                        }
+                                        onChange={(
+                                            e
+                                        ) =>
+                                            setFormData(
+                                                {
+                                                    ...formData,
+                                                    name: e
+                                                        .target
+                                                        .value,
+                                                }
+                                            )
                                         }
                                         className="w-full rounded-2xl border border-gray-200 px-5 py-4 outline-none transition focus:border-emerald-500"
                                     />
@@ -294,12 +430,21 @@ export default function DonatePage() {
                                     <input
                                         type="email"
                                         placeholder="Enter your email"
-                                        value={formData.email}
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                email: e.target.value,
-                                            })
+                                        value={
+                                            formData.email
+                                        }
+                                        onChange={(
+                                            e
+                                        ) =>
+                                            setFormData(
+                                                {
+                                                    ...formData,
+                                                    email:
+                                                        e
+                                                            .target
+                                                            .value,
+                                                }
+                                            )
                                         }
                                         className="w-full rounded-2xl border border-gray-200 px-5 py-4 outline-none transition focus:border-emerald-500"
                                     />
@@ -314,12 +459,21 @@ export default function DonatePage() {
                                     <input
                                         type="number"
                                         placeholder="Enter donation amount"
-                                        value={formData.amount}
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                amount: e.target.value,
-                                            })
+                                        value={
+                                            formData.amount
+                                        }
+                                        onChange={(
+                                            e
+                                        ) =>
+                                            setFormData(
+                                                {
+                                                    ...formData,
+                                                    amount:
+                                                        e
+                                                            .target
+                                                            .value,
+                                                }
+                                            )
                                         }
                                         className="w-full rounded-2xl border border-gray-200 px-5 py-4 outline-none transition focus:border-emerald-500"
                                     />
@@ -334,24 +488,40 @@ export default function DonatePage() {
                                     <textarea
                                         rows={5}
                                         placeholder="Write a message..."
-                                        value={formData.message}
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                message: e.target.value,
-                                            })
+                                        value={
+                                            formData.message
+                                        }
+                                        onChange={(
+                                            e
+                                        ) =>
+                                            setFormData(
+                                                {
+                                                    ...formData,
+                                                    message:
+                                                        e
+                                                            .target
+                                                            .value,
+                                                }
+                                            )
                                         }
                                         className="w-full rounded-2xl border border-gray-200 px-5 py-4 outline-none transition focus:border-emerald-500"
                                     />
                                 </div>
 
-                                {/* Button */}
+                                {/* Submit Button */}
                                 <button
                                     type="button"
-                                    onClick={handlePayment}
-                                    className="w-full rounded-2xl bg-emerald-600 px-6 py-4 text-lg font-semibold text-white transition hover:bg-emerald-700"
+                                    onClick={
+                                        handlePayment
+                                    }
+                                    disabled={
+                                        loading
+                                    }
+                                    className="w-full rounded-2xl bg-emerald-600 px-6 py-4 text-lg font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
                                 >
-                                    Proceed To Donate
+                                    {loading
+                                        ? "Processing..."
+                                        : "Proceed To Donate"}
                                 </button>
                             </form>
                         </div>
