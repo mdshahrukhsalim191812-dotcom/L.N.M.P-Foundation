@@ -3,7 +3,15 @@
 import { useEffect, useState } from "react";
 
 export default function AdminPage() {
-    const [donations, setDonations] = useState<any[]>([]);
+    type Donation = {
+        _id: string;
+        name: string;
+        email: string;
+        amount: number;
+        message: string;
+    };
+
+    const [donations, setDonations] = useState<Donation[]>([]);
 
     useEffect(() => {
         fetchDonations();
@@ -59,7 +67,7 @@ export default function AdminPage() {
 
                         <tbody>
                             {donations.length > 0 ? (
-                                donations.map((donation: any) => (
+                                donations.map((donation: Donation) => (
                                     <tr
                                         key={donation._id}
                                         className="border-b border-gray-200 hover:bg-gray-50 transition"
