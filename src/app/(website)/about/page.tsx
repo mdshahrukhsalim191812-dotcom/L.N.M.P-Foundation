@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Users, BookOpen, Heart, Globe, Award, Target, Eye } from "lucide-react";
+import { ChevronLeft, ChevronRight, Users, BookOpen, Globe, Target, Eye, LucideIcon } from "lucide-react";
 
 // Hero Slider Component
 function AboutHeroSlider() {
@@ -151,7 +151,7 @@ function AboutHeroSlider() {
 type StatCardProps = {
     number: string;
     label: string;
-    icon: any;
+    icon: LucideIcon;
     color: string;
 };
 
@@ -170,8 +170,15 @@ function StatCard({
     );
 }
 
+type ValueCardProps = {
+    title: string;
+    desc: string;
+    icon: string;
+    delay: number;
+};
+
 // Value Card Component
-function ValueCard({ title, desc, icon, delay }) {
+function ValueCard({ title, desc, icon, delay }: ValueCardProps) {
     return (
         <div
             className="rounded-2xl sm:rounded-3xl border border-gray-100 bg-white p-6 sm:p-8 shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fadeInUp"
@@ -186,8 +193,17 @@ function ValueCard({ title, desc, icon, delay }) {
     );
 }
 
+type TeamMemberProps = {
+    name: string;
+    role: string;
+    description: string;
+    image: string;
+    delay: number;
+};
+
+
 // Team Member Component
-function TeamMember({ name, role, description, image, delay }) {
+function TeamMember({ name, role, description, image, delay }: TeamMemberProps) {
     return (
         <div
             className="rounded-2xl sm:rounded-3xl bg-white p-6 sm:p-8 text-center shadow-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fadeInUp"
