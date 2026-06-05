@@ -161,7 +161,7 @@ function StatCard({
     icon: Icon,
     color,
 }: StatCardProps) {
-    {
+   npm run  {
         return (
             <div className={`rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:scale-105 bg-gradient-to-br ${color}`}>
                 <Icon className="h-7 w-7 sm:h-8 sm:w-8 text-white mb-3 sm:mb-4" />
