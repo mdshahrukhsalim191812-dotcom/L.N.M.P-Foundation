@@ -24,14 +24,14 @@ function HeroSlider() {
     {
       id: 3,
       image: "/hero/hero3-bg.jpeg",
-      title: "Youth Empowerment",
-      subtitle: "Inspiring young minds to reach their full potential",
+      title: "Healthcare Initiatives",
+      subtitle: "Ensuring wellness for all community members",
     },
     {
       id: 4,
       image: "/hero/hero4-bg.jpeg",
       title: "Healthcare Initiatives",
-      subtitle: "Ensuring wellness for all community members",
+      subtitle: "",
     },
     {
       id: 5,
