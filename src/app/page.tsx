@@ -30,8 +30,8 @@ function HeroSlider() {
     {
       id: 4,
       image: "/hero/hero4-bg.jpeg",
-      title: "Healthcare Initiatives",
-      subtitle: "",
+      title: "Shaping Youth",
+      subtitle: "Supporting to make the world a better place",
     },
     {
       id: 5,
