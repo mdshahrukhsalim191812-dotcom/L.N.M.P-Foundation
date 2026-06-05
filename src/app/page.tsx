@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Heart, Users, BookOpen, Globe, Award } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart, Users, BookOpen, Globe, Award, LucideIcon } from "lucide-react";
 
 
 // Hero Slider Component
@@ -65,7 +65,7 @@ function HeroSlider() {
       nextSlide();
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [nextSlide]);
 
   return (
     <div className="relative h-[500px] sm:h-[600px] md:h-[700px] lg:h-[100vh] overflow-hidden">
@@ -177,8 +177,16 @@ function HeroSlider() {
   );
 }
 
+type StatCardProps = {
+  number: string;
+  label: string;
+  icon: LucideIcon;
+  color: string;
+};
+
+
 // Stat Card Component
-function StatCard({ number, label, icon: Icon, color }) {
+function StatCard({ number, label, icon: Icon, color }: StatCardProps) {
   return (
     <div className={`rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:scale-105 bg-gradient-to-br ${color}`}>
       <Icon className="h-7 w-7 sm:h-8 sm:w-8 text-white mb-3 sm:mb-4" />
@@ -188,8 +196,16 @@ function StatCard({ number, label, icon: Icon, color }) {
   );
 }
 
+type ProgramCardProps = {
+  title: string;
+  desc: string;
+  icon: LucideIcon;
+  delay: number;
+};
+
+
 // Program Card Component
-function ProgramCard({ title, desc, icon: Icon, delay }) {
+function ProgramCard({ title, desc, icon: Icon, delay }: ProgramCardProps) {
   return (
     <div
       className="rounded-2xl sm:rounded-3xl bg-white p-6 sm:p-8 shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fadeInUp"
